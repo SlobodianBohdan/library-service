@@ -8,9 +8,15 @@ public interface BookService {
 
     List<Book> getAll();
 
+    Book getById(Long idBook);
+
     Book createdBook (Book book);
 
     Book updateBook (Book book);
 
     void deleteBookById(Long idBook);
+
+    void addBookByIdForUserById(Long idBook, Long idUser);
+
+    void deleteBookByIdForUserById(Long idBook, Long idUser);
 }

@@ -2,6 +2,8 @@ package org.libraryservice.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,7 +12,7 @@ public class UserDto {
 
     private Long id;
 
-    @NonNull
+    @NotBlank
     private String name;
 
 }

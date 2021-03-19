@@ -2,6 +2,8 @@ package org.libraryservice.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,9 +12,9 @@ public class BookDto {
 
     private Long id;
 
-    @NonNull
+    @NotBlank
     private String name;
 
-    @NonNull
+    @NotBlank
     private boolean isFree;
 }

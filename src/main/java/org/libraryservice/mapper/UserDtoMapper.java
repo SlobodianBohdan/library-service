@@ -5,7 +5,7 @@ import org.libraryservice.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserDtoMapper {
+public class UserDtoMapper implements EntityDtoMapper<User, UserDto>{
     public UserDto toDto(User user){
         return UserDto.builder()
                 .id(user.getId())

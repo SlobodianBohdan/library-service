@@ -3,7 +3,10 @@ package org.libraryservice.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.
+        util.List;
+import java.util.Set;
+
 
 @Data
 @Builder
@@ -21,5 +24,5 @@ public class User {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user")
-    private List<Book> books;
+    private Set<Book> books;
 }

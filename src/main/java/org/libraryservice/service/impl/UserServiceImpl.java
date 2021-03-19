@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// implement main logic and logs here
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -30,6 +32,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getById(Long idUser) {
+        return userRepository.findAllById(idUser);
+    }
+
+    @Override
     public User createdUser(User user) {
         return userRepository.save(user);
     }
@@ -44,13 +51,4 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(idUser);
     }
 
-    @Override
-    public void addBookByIdForUserById(Long idBook, Long idUser) {
-        Book addBook = bookRepository.findBookById(idBook);
-        User user = userRepository.findAllById(idUser);
-
-        Set<Book> listBook = new HashSet<>(user.getBooks());
-        listBook.add(addBook);
-        user.setBooks(List.copyOf(listBook));
-    }
 }
