@@ -16,7 +16,6 @@ public class BookDtoMapper implements EntityDtoMapper<Book, BookDto> {
 
     public Book toEntity(BookDto book) {
         return Book.builder()
-                .id(book.getId())
                 .name(book.getName())
                 .isFree(book.isFree())
                 .build();

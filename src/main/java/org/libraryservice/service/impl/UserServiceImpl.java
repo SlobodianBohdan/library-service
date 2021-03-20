@@ -1,16 +1,15 @@
 package org.libraryservice.service.impl;
 
-import org.libraryservice.entity.Book;
 import org.libraryservice.entity.User;
+import org.libraryservice.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.libraryservice.repository.BookRepository;
 import org.libraryservice.repository.UserRepository;
 import org.libraryservice.service.UserService;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 // implement main logic and logs here
 
@@ -33,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long idUser) {
+        findByIdOrThrowException(userRepository, idUser);
         return userRepository.findAllById(idUser);
     }
 
@@ -48,7 +48,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long idUser) {
+        findByIdOrThrowException(userRepository, idUser);
         userRepository.deleteById(idUser);
+    }
+
+    private <T> T findByIdOrThrowException(JpaRepository<T, Long> repository, Long id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity is not found!"));
     }
 
 }

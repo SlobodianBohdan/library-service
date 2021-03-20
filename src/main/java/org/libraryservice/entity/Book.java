@@ -28,7 +28,7 @@ public class Book {
 
     @Column(unique = true)
     private String name;
-
+    
     private boolean isFree;
 
     @ManyToOne

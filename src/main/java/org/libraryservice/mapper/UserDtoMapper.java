@@ -15,7 +15,6 @@ public class UserDtoMapper implements EntityDtoMapper<User, UserDto>{
 
     public User toEntity (UserDto user){
         return User.builder()
-                .id(user.getId())
                 .name(user.getName())
                 .build();
     }
