@@ -32,7 +32,7 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto create(@Validated @RequestBody BookDto bookDto) {
-        return mapper.toDto(bookService.createdBook(mapper.toEntity(bookDto)));
+        return mapper.toDto(bookService.creatBook(mapper.toEntity(bookDto)));
     }
 
     @PutMapping("/{id}")
@@ -57,12 +57,12 @@ public class BookController {
     @PutMapping("/take-book/{idBook}")
     @ResponseStatus(HttpStatus.OK)
     public void takeBook(@PathVariable Long idBook, @RequestParam Long idUser) {
-        bookService.addBookByIdForUserById(idBook, idUser);
+        bookService.takeBook(idBook, idUser);
     }
 
     @PutMapping("/return-book/{idBook}")
     @ResponseStatus(HttpStatus.OK)
     public void returnBook(@PathVariable Long idBook, @RequestParam Long idUser) {
-        bookService.deleteBookByIdForUserById(idBook, idUser);
+        bookService.returnBook(idBook, idUser);
     }
 }

@@ -2,6 +2,7 @@ package org.libraryservice.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.libraryservice.entity.Book;
+import org.libraryservice.entity.User;
 import org.libraryservice.exception.EntityDuplicateException;
 import org.libraryservice.exception.EntityNotFoundException;
 import org.libraryservice.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.libraryservice.repository.BookRepository;
 import org.libraryservice.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,17 +31,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getAll() {
-        return bookRepository.findAll();
+        List<Book> listBooks = bookRepository.findAll();
+        if (listBooks.isEmpty()){
+            throw new EntityNotFoundException("Books isn't found!");
+        }
+        return listBooks;
     }
 
     @Override
     public Book getById(Long idBook) {
-        findByIdOrThrowException(bookRepository, idBook);
-        return bookRepository.findBookById(idBook);
+        return findByIdOrThrowException(bookRepository, idBook);
     }
 
     @Override
-    public Book createdBook(Book book) {
+    public Book creatBook(Book book) {
         try {
             book.setFree(true);
             return bookRepository.save(book);
@@ -60,22 +65,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addBookByIdForUserById(Long idBook, Long idUser) {
-        findByIdOrThrowException(userRepository, idUser);
-        findByIdOrThrowException(bookRepository, idBook);
-        Book addBook = bookRepository.findBookByIdAndIsFreeIsTrue(idBook);
+    public boolean takeBook(Long idBook, Long idUser) {
+        User foundUser = findByIdOrThrowException(userRepository, idUser);
+        Book addBook = Optional.ofNullable(bookRepository.findBookByIdAndIsFreeIsTrue(idBook))
+                .orElseThrow(() -> new EntityNotFoundException("Book with a specified id isn't found!"));
+
         if (addBook != null){
-            addBook.setUser(userRepository.findAllById(idUser));
+            addBook.setUser(foundUser);
             addBook.setFree(false);
             bookRepository.save(addBook);
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void deleteBookByIdForUserById(Long idBook, Long idUser) {
+    public void returnBook(Long idBook, Long idUser) {
         findByIdOrThrowException(userRepository, idUser);
-        findByIdOrThrowException(bookRepository, idBook);
-        Book addBook = bookRepository.findBookByIdAndIsFreeIsFalse(idBook);
+        Book addBook = Optional.ofNullable(bookRepository.findBookByIdAndIsFreeIsFalse(idBook))
+                .orElseThrow(() -> new EntityNotFoundException("Book with a specified id isn't found!"));
+
         if (addBook != null){
             addBook.setUser(null);
             addBook.setFree(true);
@@ -84,6 +94,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private <T> T findByIdOrThrowException(JpaRepository<T, Long> repository, Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity is not found!"));
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book with a specified id isn't found!"));
     }
 }

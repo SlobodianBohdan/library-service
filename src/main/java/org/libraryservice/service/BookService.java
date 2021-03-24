@@ -10,13 +10,13 @@ public interface BookService {
 
     Book getById(Long idBook);
 
-    Book createdBook (Book book);
+    Book creatBook (Book book);
 
     Book updateBook (Book book);
 
     void deleteBookById(Long idBook);
 
-    void addBookByIdForUserById(Long idBook, Long idUser);
+    boolean takeBook(Long idBook, Long idUser);
 
-    void deleteBookByIdForUserById(Long idBook, Long idUser);
+    void returnBook(Long idBook, Long idUser);
 }

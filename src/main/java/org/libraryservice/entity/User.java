@@ -3,8 +3,6 @@ package org.libraryservice.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.
-        util.List;
 import java.util.Set;
 
 
@@ -14,7 +12,7 @@ import java.util.Set;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

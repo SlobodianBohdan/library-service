@@ -17,27 +17,28 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private BookRepository bookRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BookRepository bookRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.bookRepository = bookRepository;
     }
 
     @Override
     public List<User> getAll() {
-        return userRepository.findAll();
+        List<User> listUsers = userRepository.findAll();
+        if (listUsers.isEmpty()){
+            throw new EntityNotFoundException("Users isn't found!");
+        }
+        return listUsers;
     }
 
     @Override
     public User getById(Long idUser) {
-        findByIdOrThrowException(userRepository, idUser);
-        return userRepository.findAllById(idUser);
+        return findByIdOrThrowException(userRepository, idUser);
     }
 
     @Override
-    public User createdUser(User user) {
+    public User creatUser(User user) {
         return userRepository.save(user);
     }
 
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private <T> T findByIdOrThrowException(JpaRepository<T, Long> repository, Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity is not found!"));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with a specified id isn't found!"));
     }
 
 }
