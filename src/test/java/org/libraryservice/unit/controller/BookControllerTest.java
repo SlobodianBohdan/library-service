@@ -181,8 +181,8 @@ public class BookControllerTest extends AbstractTest {
         doNothing().when(bookService).deleteBookById(TEST_BOOK.getId());
 
         mockMvc.perform(delete(url + "/" + TEST_BOOK.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         verify(bookService).deleteBookById(TEST_BOOK.getId());
     }
@@ -203,7 +203,7 @@ public class BookControllerTest extends AbstractTest {
     @SneakyThrows
     @Test
     public void checkTakeBook_successFlow() {
-        when(bookService.takeBook(TEST_BOOK.getId(), TEST_USER.getId())).thenReturn(true);
+        doNothing().when(bookService).takeBook(TEST_BOOK.getId(), TEST_USER.getId());
 
         mockMvc.perform(put(url + "/take-book/" + TEST_BOOK.getId() + "?idUser=" + TEST_USER.getId())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -215,8 +215,8 @@ public class BookControllerTest extends AbstractTest {
     @SneakyThrows
     @Test
     public void checkTakeBook_errorFlow() {
-        when(bookService.takeBook(FAKE_ID, FAKE_ID))
-                .thenThrow(new EntityNotFoundException("Book with a specified id isn't found!")).thenReturn(false);
+        doThrow(new EntityNotFoundException("Book with a specified id isn't found!"))
+                .when(bookService).takeBook(FAKE_ID, FAKE_ID);
 
         mockMvc.perform(put(url + "/take-book/" + FAKE_ID + "?idUser=" + FAKE_ID)
                 .contentType(MediaType.APPLICATION_JSON))

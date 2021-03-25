@@ -31,11 +31,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getAll() {
-        List<Book> listBooks = bookRepository.findAll();
-        if (listBooks.isEmpty()){
-            throw new EntityNotFoundException("Books isn't found!");
-        }
-        return listBooks;
+        return bookRepository.findAll();
     }
 
     @Override
@@ -55,6 +51,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book updateBook(Book book) {
+        findByIdOrThrowException(bookRepository, book.getId());
         return bookRepository.save(book);
     }
 
@@ -65,32 +62,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean takeBook(Long idBook, Long idUser) {
+    public void takeBook(Long idBook, Long idUser) {
         User foundUser = findByIdOrThrowException(userRepository, idUser);
         Book addBook = Optional.ofNullable(bookRepository.findBookByIdAndIsFreeIsTrue(idBook))
                 .orElseThrow(() -> new EntityNotFoundException("Book with a specified id isn't found!"));
 
-        if (addBook != null){
-            addBook.setUser(foundUser);
-            addBook.setFree(false);
-            bookRepository.save(addBook);
-            return true;
-        }
-
-        return false;
+        addBook.setUser(foundUser);
+        addBook.setFree(false);
+        bookRepository.save(addBook);
     }
 
     @Override
     public void returnBook(Long idBook, Long idUser) {
-        findByIdOrThrowException(userRepository, idUser);
-        Book addBook = Optional.ofNullable(bookRepository.findBookByIdAndIsFreeIsFalse(idBook))
+        User foundUser = findByIdOrThrowException(userRepository, idUser);
+        Book addBook = Optional.ofNullable(bookRepository.findBookByIdAndIsFreeIsFalseAndUser(idBook, foundUser))
                 .orElseThrow(() -> new EntityNotFoundException("Book with a specified id isn't found!"));
 
-        if (addBook != null){
-            addBook.setUser(null);
-            addBook.setFree(true);
-            bookRepository.save(addBook);
-        }
+        addBook.setUser(null);
+        addBook.setFree(true);
+        bookRepository.save(addBook);
     }
 
     private <T> T findByIdOrThrowException(JpaRepository<T, Long> repository, Long id) {

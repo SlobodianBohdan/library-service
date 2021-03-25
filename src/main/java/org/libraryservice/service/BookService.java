@@ -16,7 +16,7 @@ public interface BookService {
 
     void deleteBookById(Long idBook);
 
-    boolean takeBook(Long idBook, Long idUser);
+    void takeBook(Long idBook, Long idUser);
 
     void returnBook(Long idBook, Long idUser);
 }

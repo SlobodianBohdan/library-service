@@ -11,7 +11,6 @@ import org.libraryservice.service.UserService;
 
 import java.util.List;
 
-// implement main logic and logs here
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,16 +24,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        List<User> listUsers = userRepository.findAll();
-        if (listUsers.isEmpty()){
-            throw new EntityNotFoundException("Users isn't found!");
-        }
-        return listUsers;
+        return userRepository.findAll();
     }
 
     @Override
     public User getById(Long idUser) {
-        return findByIdOrThrowException(userRepository, idUser);
+        return findByIdOrThrowException(idUser);
     }
 
     @Override
@@ -44,17 +39,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
+        findByIdOrThrowException(user.getId());
         return userRepository.save(user);
     }
 
     @Override
     public void deleteUserById(Long idUser) {
-        findByIdOrThrowException(userRepository, idUser);
+        findByIdOrThrowException( idUser);
         userRepository.deleteById(idUser);
     }
 
-    private <T> T findByIdOrThrowException(JpaRepository<T, Long> repository, Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with a specified id isn't found!"));
+    private User findByIdOrThrowException(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with a specified id isn't found!"));
     }
 
 }

@@ -92,10 +92,12 @@ public class BookServiceTest {
         Book expected = book1;
 
         when(bookRepository.save(book1)).thenReturn(expected);
+        when(bookRepository.findById(book1.getId())).thenReturn(Optional.of(book1));
         Book actual = bookService.updateBook(book1);
 
         assertEquals(expected, actual);
         verify(bookRepository).save(book1);
+        verify(bookRepository).findById(book1.getId());
     }
 
     @Test
@@ -113,7 +115,7 @@ public class BookServiceTest {
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
         when(bookRepository.findBookByIdAndIsFreeIsTrue(book1.getId())).thenReturn(book1);
 
-        assertEquals(true, bookService.takeBook(book1.getId(), user.getId()));
+        bookService.takeBook(book1.getId(), user.getId());
 
         verify(userRepository).findById(user.getId());
         verify(bookRepository).findBookByIdAndIsFreeIsTrue(book1.getId());
@@ -124,12 +126,12 @@ public class BookServiceTest {
     public void checkReturnBookById_successFlow() {
         book1.setFree(false);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(bookRepository.findBookByIdAndIsFreeIsFalse(book1.getId())).thenReturn(book1);
+        when(bookRepository.findBookByIdAndIsFreeIsFalseAndUser(book1.getId(), user)).thenReturn(book1);
 
         bookService.returnBook(book1.getId(), user.getId());
 
         verify(userRepository).findById(user.getId());
-        verify(bookRepository).findBookByIdAndIsFreeIsFalse(book1.getId());
+        verify(bookRepository).findBookByIdAndIsFreeIsFalseAndUser(book1.getId(), user);
         verify(bookRepository).save(book1);
     }
 

@@ -86,10 +86,12 @@ public class UserServiceTest {
         User expected = user1;
 
         when(userRepository.save(user1)).thenReturn(expected);
+        when(userRepository.findById(user1.getId())).thenReturn(Optional.of(user1));
         User actual = userService.updateUser(user1);
 
         assertEquals(expected, actual);
         verify(userRepository).save(user1);
+        verify(userRepository).findById(user1.getId());
     }
 
     @Test

@@ -176,7 +176,7 @@ public class UserControllerTest extends AbstractTest {
 
         mockMvc.perform(delete(url + "/" + TEST_USER.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(userService).deleteUserById(TEST_USER.getId());
     }
